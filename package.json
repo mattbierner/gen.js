@@ -1,0 +1,17 @@
+{
+  "name": "gen.js",
+  "version": "0.1.0",
+  "description": "Javascript Generator Library",
+  "main": "callable",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mattbierner/gen.js.git"
+  },
+  "keywords": [
+  ],
+  "author": "Matt Bierner",
+  "license": "MIT"
+}
