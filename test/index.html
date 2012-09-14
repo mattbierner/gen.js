@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Gen Tests</title>
+    <link rel="stylesheet" href="resources/qunit-1.9.0.css">
+</head>
+
+<body lang="en">
+    <div id="qunit"></div>
+    
+    <script src="resources/qunit-1.9.0.js"></script>
+    <script type="application/javascript" src="resources/require.js"></script>
+    <script type="application/javascript">
+        require(
+            ['../lib/gen', 'testMain', 'testReduce', 'testMap', 'testFilter',
+                'testToArray'],
+            function(gen, testMain, testReduce, testMap, testFilter, testToArray)
+            {
+                [testMain, testReduce, testMap, testFilter,
+                  testToArray].forEach(function(m){
+                    m.module && module(m.module);
+                    m.tests.forEach(function(e){ test.apply(this, e); });
+            });
+        });
+    </script>
+
+</body>
+    
+</html>

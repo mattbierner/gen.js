@@ -1,0 +1,35 @@
+define(['../lib/gen', 'shared'], function(gen, shared){
+    
+    function add(p, c) {
+        return p + c ;
+    }
+    
+    return {
+        'module': "Reduce Tests",
+        'tests': [
+            ["Simple Reduce",
+            function(){
+                var g = gen.reduce(shared.count(4), add, 0);
+                assert.equal(g(), 6);
+                assert.throws(g);
+                
+                var g2 = gen(shared.count(4)).reduce(add, 0);
+                assert.equal(g2(), 6);
+                assert.throws(g2);
+            }],
+            ["Empty Reduce",
+            function(){
+                var g = gen.reduce(shared.count(0), add, 100);
+                assert.equal(g(), 100);
+                assert.throws(g);
+            }],
+            ["Reduce Stack Size",
+            function(){
+                var g = gen.reduce(shared.count(10000), add, 0);
+                assert.equal(g(), 49995000);
+                assert.throws(g);
+            }],
+           
+        ],
+    };
+});
