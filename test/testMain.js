@@ -28,6 +28,19 @@ define(['../lib/gen', 'shared'], function(gen, shared){
                 assert.equal(g(), 2);
                 assert.equal(g(), 4);
             }],
+            ["Undefined Gen",
+            function() {
+                // Make sure generator can yield undefined.
+                var i = 0;
+                var g = gen(function(y, b){
+                    if (i % 2) { i++; return y(undefined); }
+                    return y(i++);
+                });
+                assert.equal(g(), 0);
+                assert.equal(g(), undefined);
+                assert.equal(g(), 2);
+                assert.equal(g(), undefined);
+            }],
             ["evenGen Stack Size Gen",
             function(){
                 var g = gen(evenGen());
@@ -45,31 +58,6 @@ define(['../lib/gen', 'shared'], function(gen, shared){
                 });
                 assert.equal(g(), 1);
             }],
-            ["Undefined Gen",
-            function() {
-                // Make sure generator can yield undefined.
-                var i = 0;
-                var g = gen(function(y, b){
-                    if (i % 2) { i++; return y(undefined); }
-                    return y(i++);
-                });
-                assert.equal(g(), 0);
-                assert.equal(g(), undefined);
-                assert.equal(g(), 2);
-                assert.equal(g(), undefined);
-            }],
-            
-            ["Wrapped Gen",
-            function(){
-                var g = gen(gen(shared.count(4)));
-                assert.equal(g(), 0);
-                assert.equal(g(), 1);
-                assert.equal(g(), 2);
-                assert.equal(g(), 3);
-                assert.throws(g);
-            }],
-            
-            
         ],
     };
 });
