@@ -41,6 +41,13 @@ define(['../lib/gen', 'shared'], function(gen, shared){
                 assert.equal(g(), 2);
                 assert.equal(g(), undefined);
             }],
+            ["Custom Yield",
+            function(){
+                var g = gen(evenGen()).bind(undefined, function(v){});
+                assert.equal(g(), 0);
+                assert.equal(g(), 2);
+                assert.equal(g(), 4);
+            }],
             ["evenGen Stack Size Gen",
             function(){
                 var g = gen(evenGen());

@@ -37,7 +37,7 @@ Operations can also be applied to generators:
     f() -> 144
     ...
 
-# Using Callable.js #
+# Using gen.js #
 gen.js can be used either as an AMD style module or in the global scope.
 
 ## With AMD ##
@@ -50,7 +50,7 @@ Include any AMD style module loader and load gen:
         <script type="application/javascript" src="require.js"></script>
         <script type="application/javascript">
             require(['gen'], function(gen) {
-                
+                var g = gen(...);
             });
         </script>
     </body>
@@ -64,17 +64,16 @@ Include gen.js file directly and use 'gen' global.
     <body>
         <script type="application/javascript" src="callable.js"></script>
         <script type="application/javascript">
-        
+            var g = gen(...);
         </script>
     </body>
 
 # High Level Overview #
-In this contaxt, a generator is a special function that yields values from a
+In this context, a generator is a special function that yields values from a
 sequence with each call. Generator functions often maintain internal state.
 
 ## Generators ##
-In gen.js, generator's must conform to a set API to behave correctly. Here is
-an example of a generator that yields the fibonacci sequence.
+Here is an example of a generator that yields the fibonacci sequence:
 
     function fibonacci() {         // Factory for generator
         var c = 0, d = 1;          // Generator's implicit state
@@ -82,9 +81,27 @@ an example of a generator that yields the fibonacci sequence.
             var next = c;          // fibonacci logic
             c = d;
             d = next + d;
-            return y(next);        // Yield the next value using continuation y.
+            return y(next);        // Yield the value 'next'.
         };
     }
+
+In gen.js, generator's must conform to a set API to behave correctly. As seen
+here, stateful generators usually are created using a factory. The factory defines
+an implicit state for generator with its context and arguments can be passed to
+the factory function to control the behavior output generator.
+
+Generator functions themselves take two continuations, 'y' and 'b', as arguments
+and must return the result of one of these continuations. Because we cannot support
+a language level yield statement, generators in gen.js are bit more difficult to
+write than generators in languages like Python.
+
+'y' is the yield continuation that yields a value from the generator. 'b' is the
+break continuation that is called when the generator has no more values to yield.
+When a generator does not return a value, this is assumed to be an implicit 
+continue request and the generator function will be invoked again until it 
+returns a yield or break.
+
+## Gen Continuations ##
 
 
 
