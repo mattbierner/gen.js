@@ -62,6 +62,21 @@ define(['../lib/gen', 'shared'], function(gen, shared){
                 g();
                 assert.equal(b, 10);
             }],
+            ["Test Chaining",
+            function(){
+                var inc = function(v){ return v + 1;};
+                var doub = function(v){ return v * 2;};
+
+                var g = gen(shared.count(2)).map(inc).map(doub);
+                assert.equal(g(), 2);
+                assert.equal(g(), 4);
+                assert.throws(g);
+                
+                var g2 = gen(shared.count(2)).map(doub).map(inc);
+                assert.equal(g2(), 1);
+                assert.equal(g2(), 3);
+                assert.throws(g2);
+            }],
             ["evenGen Stack Size Gen",
             function(){
                 var g = gen(evenGen());
