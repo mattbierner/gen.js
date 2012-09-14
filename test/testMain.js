@@ -43,10 +43,24 @@ define(['../lib/gen', 'shared'], function(gen, shared){
             }],
             ["Custom Yield",
             function(){
-                var g = gen(evenGen()).bind(undefined, function(v){});
+                var b;
+                var g = gen(shared.count(2)).bind(undefined, function(v){ b = v; return function(){}});
+                
+                g();
+                assert.equal(b, 0);
+                g();
+                assert.equal(b, 1);
+                assert.throws(g);
+            }],
+            ["Custom Break",
+            function(){
+                var b;
+                var g = gen(shared.count(2)).bind(undefined, undefined, function(){ b = 10; return function(){}});
+                
                 assert.equal(g(), 0);
-                assert.equal(g(), 2);
-                assert.equal(g(), 4);
+                assert.equal(g(), 1);
+                g();
+                assert.equal(b, 10);
             }],
             ["evenGen Stack Size Gen",
             function(){
