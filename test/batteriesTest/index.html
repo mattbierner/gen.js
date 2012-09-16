@@ -15,14 +15,15 @@
         requirejs.config({
             paths: {
                 gen: '../../lib/gen',
+                bat: '../../lib/gen-batteries',
                 shared: '../shared'
             }
         });
         require(
-            ['gen', 'testTake'],
-            function(gen, testTake)
+            ['gen', 'testTake', 'testSkip'],
+            function(gen, testTake, testSkip)
             {
-                [testTake].forEach(function(m){
+                [testTake, testSkip].forEach(function(m){
                     m.module && module(m.module);
                     m.tests.forEach(function(e){ test.apply(this, e); });
             });

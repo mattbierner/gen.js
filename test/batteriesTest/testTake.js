@@ -1,47 +1,54 @@
-define(['gen'], function(gen, shared){
-    
-    function isOdd(v) { return v % 2; }
-    
+define(['gen', 'bat', 'shared'], function(gen, bat, shared){
+        
     return {
-        'module': "Filter Tests",
+        'module': "Take Tests",
         'tests': [
-            ["Simple Filter",
+            ["Simple Take",
             function(){
-                var g = gen.filter(shared.count(4), isOdd);
+                var g = bat.take(gen(shared.count()), 2);
+                assert.equal(g(), 0);
                 assert.equal(g(), 1);
-                assert.equal(g(), 3);
                 assert.throws(g);
-                
-                var g2 = gen(shared.count(4)).filter(isOdd);
-                assert.equal(g2(), 1);
-                assert.equal(g2(), 3);
-                assert.throws(g2);
+            }],
+            ["Zero Take",
+            function(){
+                var g = bat.take(gen(shared.count()), 0);
+                assert.throws(g);
+            }],
+            ["Bad Take",
+            function(){
+                var g = bat.take(gen(shared.count()), -1);
+                assert.equal(g(), 0);
+                assert.equal(g(), 1);
+                assert.equal(g(), 2);
+            }],
+            ["Length Take",
+            function(){
+                var g = bat.take(gen(shared.count(2)), 4);
+                assert.equal(g(), 0);
+                assert.equal(g(), 1);
+                assert.throws(g);
             }], 
             ["Custom Yield",
             function(){
                 var b;
-                var g = gen(shared.count(4)).filter(isOdd).bind(undefined, function(v){ b = v; return function(){}});
+                var g = bat.take(gen(shared.count()), 2).bind(undefined, function(v){ b = v; return function(){}});
                 
                 g();
-                assert.equal(b, 1);
+                assert.equal(b, 0);
                 g();
-                assert.equal(b, 3);
+                assert.equal(b, 1);
                 assert.throws(g);
             }],
             ["Custom Break",
             function(){
                 var b;
-                var g = gen(shared.count(4)).filter(isOdd).bind(undefined, undefined, function(){ b = 10; return function(){}});
+                var g = bat.take(gen(shared.count()), 2).bind(undefined, undefined, function(){ b = 10; return function(){}});
                 
+                assert.equal(g(), 0);
                 assert.equal(g(), 1);
-                assert.equal(g(), 3);
                 g();
                 assert.equal(b, 10);
-            }],
-            ["Filter Stack Size Test",
-            function(){
-                var g = gen.filter(shared.count(), function(v){ return v > 100000; });
-                assert.equal(g(), 100001);
             }],
         ],
     };
