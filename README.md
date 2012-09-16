@@ -161,8 +161,8 @@ An object that defines the properties, in 'Object.defineProperties' notation, to
 set on returned generator functions. Unlike prototype, adding or changing
 properties only effects instances created after the property is changed.
 
-## gen.map(source, callback: function(value), thisObj): gen
-gen().map(callback: function(value), thisObj): gen ##
+## gen.map(source, callback: function(value), thisObj): gen ##
+** gen().map(callback: function(value), thisObj): gen **
 Creates a mapped generator for a source generator. Mapped generator runs source
 generator values through a callback function and returns the result.
 
@@ -170,8 +170,8 @@ generator values through a callback function and returns the result.
     g(); -> 1
     g(); -> 2
 
-## gen.filter(source, predicate: function(value): boolean, thisObj)
-gen().filter(predicate: function(value): boolean, thisObj)##
+## gen.filter(source, predicate: function(value): boolean, thisObj) ##
+** gen().filter(predicate: function(value): boolean, thisObj) **
 Creates a filtered generator for a source generator. Filtered generator only
 returns filtered generator results that satisfy a given predicate.
 
@@ -179,8 +179,8 @@ returns filtered generator results that satisfy a given predicate.
     g(); -> 0
     g(); -> 2
 
-## gen.reduce(source, callback: function(previous, current), initial)
-gen().reduce(callback: function(previous, current), initial)##
+## gen.reduce(source, callback: function(previous, current), initial) ##
+** gen().reduce(callback: function(previous, current), initial) **
 Creates a reduce generator for a source generator. Reduce generator attempts
 to reduce the source generator using the callback function and yield a single
 result. Will attempt the entire reduction when called. Calling on an infinite
@@ -190,8 +190,8 @@ source will stall the program.
     g(); -> 6
     g(); -> Break
 
-## gen.toArray(source)
-gen().toArray() ##
+## gen.toArray(source) ##
+** gen().toArray() **
 Creates a toArray generator for a source generator. ToArray generator attempts
 to reduce the source generator to an array of its elements and yield this array.
 Calling on an infinite source will stall the program.
@@ -200,8 +200,8 @@ Calling on an infinite source will stall the program.
     g(); -> [0, 1, 2, 3]
     g(); -> Break
 
-## gen.forEach(source, callback: function(value), t)
-gen().forEach(callback: function(value), t) ##
+## gen.forEach(source, callback: function(value), t) ##
+** gen().forEach(callback: function(value), t)**
 Creates a forEach generator for a source generator. forEach generator attempts to
 iterate over entire source generator and call callback for each value. Yields
 a single value, void. Calling on an infinite source will stall the program.
