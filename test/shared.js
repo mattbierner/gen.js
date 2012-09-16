@@ -1,4 +1,4 @@
-define(['../lib/gen'], function(gen){
+define(['gen'], function(gen){
     return {
         'count':
             function(n) {

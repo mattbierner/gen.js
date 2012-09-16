@@ -1,4 +1,4 @@
-define(['gen', 'shared'], function(gen, shared){
+define(['gen'], function(gen, shared){
     
     function isOdd(v) { return v % 2; }
     

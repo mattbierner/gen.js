@@ -1,4 +1,4 @@
-define(['../lib/gen', 'shared'], function(gen, shared){
+define(['gen', 'shared'], function(gen, shared){
     
     function add(p, c) {
         return p + c ;
