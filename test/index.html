@@ -14,11 +14,12 @@
     <script type="application/javascript">
         require(
             ['../lib/gen', 'testMain', 'testReduce', 'testMap', 'testFilter',
-                'testToArray'],
-            function(gen, testMain, testReduce, testMap, testFilter, testToArray)
+                'testToArray', 'testForEach'],
+            function(gen, testMain, testReduce, testMap, testFilter,
+                testToArray, testForEach)
             {
                 [testMain, testReduce, testMap, testFilter,
-                  testToArray].forEach(function(m){
+                  testToArray, testForEach].forEach(function(m){
                     m.module && module(m.module);
                     m.tests.forEach(function(e){ test.apply(this, e); });
             });
