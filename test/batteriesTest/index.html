@@ -20,10 +20,13 @@
             }
         });
         require(
-            ['gen', 'testTake', 'testSkip'],
-            function(gen, testTake, testSkip)
+            ['gen', 'testTakeWhile', 'testTake', 'testSkipWhile', 'testSkip',
+                'testCount', 'testAny'],
+            function(gen, testTakeWhile, testTake, testSkipWhile, testSkip,
+                testCount, testAny)
             {
-                [testTake, testSkip].forEach(function(m){
+                [testTakeWhile, testTake, testSkipWhile, testSkip,
+                    testCount, testAny].forEach(function(m){
                     m.module && module(m.module);
                     m.tests.forEach(function(e){ test.apply(this, e); });
             });
