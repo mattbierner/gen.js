@@ -22,7 +22,9 @@ define(['gen', 'shared'], function(gen, shared){
             function(){
                 expect(1);
                 var vv, ii;
-                var g = gen(shared.count(4)).forEach(function(v, i){ vv = v; ii = i;}).async();
+                var g = gen(shared.count(4))
+                    .forEach(function(v, i){ vv = v; ii = i;})
+                    .async();
                 g(function(){
                     assert.equal(vv, 3);
                     start();
