@@ -43,6 +43,8 @@ define(['gen', 'shared'], function(gen, shared){
                 assert.equal(n, undefined);
                 g(y, b);
                 assert.equal(n, true);
+                assert.equal(m, 2);
+
             }],
             
            

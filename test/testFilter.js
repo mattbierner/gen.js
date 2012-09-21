@@ -35,13 +35,17 @@ define(['gen', 'shared'], function(gen, shared){
             }],
             ["Custom Break",
             function(){
-                var b;
-                var g = gen(shared.count(4)).filter(isOdd).sync().bind(undefined, undefined, function(){ b = 10; return function(){}});
+                var b, c
+                var g = gen(shared.count(4))
+                    .filter(isOdd)
+                    .sync()
+                    .bind(undefined, function(v){ c = v; return function(){ return v; }}, function(){ b = 10; return function(){}});
                 
                 assert.equal(g(), 1);
                 assert.equal(g(), 3);
                 g();
                 assert.equal(b, 10);
+                assert.equal(c, 3);
             }],
             ["Filter Stack Size Test",
             function(){
