@@ -5,23 +5,23 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
         'tests': [
             ["Simple Any",
             function(){
-                var g = bat.any(gen(shared.count(4)), function(v, i){ return v == 2 });
+                var g = bat.any(gen(shared.count(4)), function(v, i){ return v == 2 }).sync();
                 assert.equal(g(), true);
                 assert.throws(g);
             }],
             ["None Any",
             function(){
-                var g = bat.any(gen(shared.count(4)), function(){ return false; });
+                var g = bat.any(gen(shared.count(4)), function(){ return false; }).sync();
                 assert.equal(g(), false);
                 assert.throws(g);
                 
-                var g2 = bat.any(gen(shared.count(0)), function(){ return true; });
+                var g2 = bat.any(gen(shared.count(0)), function(){ return true; }).sync();
                 assert.equal(g2(), false);
                 assert.throws(g2);
             }],
             ["Lazy Any",
             function(){
-                var g = bat.any(gen(shared.count()), function(){ return true; });
+                var g = bat.any(gen(shared.count()), function(){ return true; }).sync();
                 assert.equal(g(), true);
                 assert.throws(g);
             }],
@@ -30,6 +30,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = bat
                     .any(gen(shared.count(4)), function(v){ return v == 2; })
+                    .sync()
                     .bind(undefined, function(v){ b = v; return function(){}});
                 
                 g();
@@ -41,6 +42,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = bat
                     .any(gen(shared.count(4)), function(v){ return v == 2; })
+                    .sync()
                     .bind(undefined, undefined, function(){ b = 10; return function(){}});
                 
                 assert.equal(g(), true);

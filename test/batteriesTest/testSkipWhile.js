@@ -5,20 +5,20 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
         'tests': [
             ["Simple SkipWhile",
             function(){
-                var g = bat.skipWhile(gen(shared.count()), function(v){ return v < 4; });
+                var g = bat.skipWhile(gen(shared.count()), function(v){ return v < 4; }).sync();
                 assert.equal(g(), 4);
                 assert.equal(g(), 5);
             }],
             ["Break SkipWhile",
             function(){
-                var g = bat.skipWhile(gen(shared.count(4)), function(v){ return v < 2; });
+                var g = bat.skipWhile(gen(shared.count(4)), function(v){ return v < 2; }).sync();
                 assert.equal(g(), 2);
                 assert.equal(g(), 3);
                 assert.throws(g);
             }],
             ["Zero SkipWhile",
             function(){
-                var g = bat.skipWhile(gen(shared.count()), function(){ return false; });
+                var g = bat.skipWhile(gen(shared.count()), function(){ return false; }).sync();
                 assert.equal(g(), 0);
                 assert.equal(g(), 1);
             }],
@@ -27,6 +27,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = bat
                     .skipWhile(gen(shared.count()), function(v){ return v < 4; })
+                    .sync()
                     .bind(undefined, function(v){ b = v; return function(){}});
                 
                 g();
@@ -39,6 +40,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = bat
                     .skipWhile(gen(shared.count(4)), function(v){ return v < 2; })
+                    .sync()
                     .bind(undefined, undefined, function(){ b = 10; return function(){}});
                 
                 assert.equal(g(), 2);

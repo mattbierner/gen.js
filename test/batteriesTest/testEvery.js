@@ -5,29 +5,29 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
         'tests': [
             ["Simple every",
             function(){
-                var g = bat.every(gen(shared.count(4)), function(v, i){ return v < 10 });
+                var g = bat.every(gen(shared.count(4)), function(v, i){ return v < 10 }).sync();
                 assert.equal(g(), true);
                 assert.throws(g);
                 
-                var g2 = bat.every(gen(shared.count(4)), function(v, i){ return v < 2 });
+                var g2 = bat.every(gen(shared.count(4)), function(v, i){ return v < 2 }).sync();
                 assert.equal(g2(), false);
                 assert.throws(g2);
             }],
             ["None every",
             function(){
-                var g = bat.every(gen(shared.count(4)), function(){ return false; });
+                var g = bat.every(gen(shared.count(4)), function(){ return false; }).sync();
                 assert.equal(g(), false);
                 assert.throws(g);
             }],
             ["Empty every",
             function(){
-                var g2 = bat.every(gen(shared.count(0)), function(){ return true; });
+                var g2 = bat.every(gen(shared.count(0)), function(){ return true; }).sync();
                 assert.equal(g2(), true);
                 assert.throws(g2);
             }],
             ["Lazy every",
             function(){
-                var g = bat.every(gen(shared.count()), function(){ return false; });
+                var g = bat.every(gen(shared.count()), function(){ return false; }).sync();
                 assert.equal(g(), false);
                 assert.throws(g);
             }],
@@ -36,6 +36,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = bat
                     .every(gen(shared.count(4)), function(v){ return v < 10; })
+                    .sync()
                     .bind(undefined, function(v){ b = v; return function(){}});
                 
                 g();
@@ -47,6 +48,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = bat
                     .every(gen(shared.count(4)), function(v){ return v < 10; })
+                    .sync()
                     .bind(undefined, undefined, function(){ b = 10; return function(){}});
                 
                 assert.equal(g(), true);

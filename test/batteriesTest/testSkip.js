@@ -5,26 +5,26 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
         'tests': [
             ["Simple Skip",
             function(){
-                var g = bat.skip(gen(shared.count()), 4);
+                var g = bat.skip(gen(shared.count()), 4).sync();
                 assert.equal(g(), 4);
                 assert.equal(g(), 5);
             }],
             ["Break Skip",
             function(){
-                var g = bat.skip(gen(shared.count(4)), 2);
+                var g = bat.skip(gen(shared.count(4)), 2).sync()
                 assert.equal(g(), 2);
                 assert.equal(g(), 3);
                 assert.throws(g);
             }],
             ["Zero Skip",
             function(){
-                var g = bat.skip(gen(shared.count()), 0);
+                var g = bat.skip(gen(shared.count()), 0).sync();
                 assert.equal(g(), 0);
                 assert.equal(g(), 1);
             }],
             ["Bad Skip",
             function(){
-                var g = bat.skip(gen(shared.count()), -1);
+                var g = bat.skip(gen(shared.count()), -1).sync();
                 assert.equal(g(), 0);
                 assert.equal(g(), 1);
                 assert.equal(g(), 2);
@@ -32,7 +32,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             ["Custom Yield",
             function(){
                 var b;
-                var g = bat.skip(gen(shared.count()), 4).bind(undefined, function(v){ b = v; return function(){}});
+                var g = bat.skip(gen(shared.count()), 4).sync().bind(undefined, function(v){ b = v; return function(){}});
                 
                 g();
                 assert.equal(b, 4);
@@ -42,7 +42,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             ["Custom Break",
             function(){
                 var b;
-                var g = bat.skip(gen(shared.count(4)), 2).bind(undefined, undefined, function(){ b = 10; return function(){}});
+                var g = bat.skip(gen(shared.count(4)), 2).sync().bind(undefined, undefined, function(){ b = 10; return function(){}});
                 
                 assert.equal(g(), 2);
                 assert.equal(g(), 3);
