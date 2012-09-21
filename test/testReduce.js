@@ -9,24 +9,26 @@ define(['gen', 'shared'], function(gen, shared){
         'tests': [
             ["Simple Reduce",
             function(){
-                var g = gen.reduce(shared.count(4), add, 0);
+                var g = gen.reduce(shared.count(4), add, 0).sync();
                 assert.equal(g(), 6);
                 assert.throws(g);
                 
-                var g2 = gen(shared.count(4)).reduce(add, 0);
+                var g2 = gen(shared.count(4))
+                    .reduce(add, 0)
+                    .sync();
                 assert.equal(g2(), 6);
                 assert.throws(g2);
             }],
             ["Empty Reduce",
             function(){
-                var g = gen.reduce(shared.count(0), add, 100);
+                var g = gen.reduce(shared.count(0), add, 100).sync();
                 assert.equal(g(), 100);
                 assert.throws(g);
             }],
             ["Custom Yield",
             function(){
                 var b;
-                var g = gen(shared.count(4)).reduce(add, 0).bind(undefined, function(v){ b = v; return function(){}});
+                var g = gen(shared.count(4)).reduce(add, 0).sync().bind(undefined, function(v){ b = v; return function(){}});
                 
                 g();
                 assert.equal(b, 6);
@@ -35,7 +37,7 @@ define(['gen', 'shared'], function(gen, shared){
             ["Custom Break",
             function(){
                 var b;
-                var g = gen(shared.count(4)).reduce(add, 0).bind(undefined, undefined, function(){ b = 10; return function(){}});
+                var g = gen(shared.count(4)).reduce(add, 0).sync().bind(undefined, undefined, function(){ b = 10; return function(){}});
                 
                 assert.equal(g(), 6);
                 g();
@@ -43,7 +45,7 @@ define(['gen', 'shared'], function(gen, shared){
             }],
             ["Reduce Stack Size",
             function(){
-                var g = gen.reduce(shared.count(10000), add, 0);
+                var g = gen.reduce(shared.count(10000), add, 0).sync();
                 assert.equal(g(), 49995000);
                 assert.throws(g);
             }],

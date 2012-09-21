@@ -6,13 +6,13 @@ define(['gen', 'shared'], function(gen, shared){
             ["Simple ForEach",
             function(){
                 var b = 0;
-                var g = gen.forEach(shared.count(4), function(v){ b += v;});
+                var g = gen.forEach(shared.count(4), function(v){ b += v;}).sync();
                 g();
                 assert.equal(b, 6);
                 assert.throws(g);
                 
                 var b2 = 0;
-                var g2 = gen(shared.count(4)).forEach(function(v){ b2 += v;});
+                var g2 = gen(shared.count(4)).forEach(function(v){ b2 += v;}).sync();
                 g2()
                 assert.equal(b2, 6);
                 assert.throws(g2);
@@ -20,7 +20,7 @@ define(['gen', 'shared'], function(gen, shared){
             ["Custom Yield",
             function(){
                 var x, b = 0;
-                var g = gen.forEach(shared.count(4), function(v){ b += v;});
+                var g = gen.forEach(shared.count(4), function(v){ b += v;}).sync();
                 var y = function(v){ x = 100; return function(){ return v; } };
                 
                 g(y);
@@ -32,7 +32,7 @@ define(['gen', 'shared'], function(gen, shared){
             ["Custom Break",
             function(){
                 var m, n, x = 0;
-                var g = gen.forEach(shared.count(4), function(v){ x += v;});
+                var g = gen.forEach(shared.count(4), function(v){ x += v;}).sync();
                 var y = function(v){ m = 100; return function(){ return v; } };
                 var b = function(v){ n = true; return function(){ } };
                 

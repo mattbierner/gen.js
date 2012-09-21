@@ -7,12 +7,14 @@ define(['gen', 'shared'], function(gen, shared){
         'tests': [
             ["Simple Filter",
             function(){
-                var g = gen.filter(shared.count(4), isOdd);
+                var g = gen.filter(shared.count(4), isOdd).sync();
                 assert.equal(g(), 1);
                 assert.equal(g(), 3);
                 assert.throws(g);
                 
-                var g2 = gen(shared.count(4)).filter(isOdd);
+                var g2 = gen(shared.count(4))
+                    .filter(isOdd)
+                    .sync();
                 assert.equal(g2(), 1);
                 assert.equal(g2(), 3);
                 assert.throws(g2);
@@ -20,7 +22,10 @@ define(['gen', 'shared'], function(gen, shared){
             ["Custom Yield",
             function(){
                 var b;
-                var g = gen(shared.count(4)).filter(isOdd).bind(undefined, function(v){ b = v; return function(){}});
+                var g = gen(shared.count(4))
+                    .filter(isOdd)
+                    .sync()
+                    .bind(undefined, function(v){ b = v; return function(){}});
                 
                 g();
                 assert.equal(b, 1);
@@ -31,7 +36,7 @@ define(['gen', 'shared'], function(gen, shared){
             ["Custom Break",
             function(){
                 var b;
-                var g = gen(shared.count(4)).filter(isOdd).bind(undefined, undefined, function(){ b = 10; return function(){}});
+                var g = gen(shared.count(4)).filter(isOdd).sync().bind(undefined, undefined, function(){ b = 10; return function(){}});
                 
                 assert.equal(g(), 1);
                 assert.equal(g(), 3);
@@ -40,7 +45,7 @@ define(['gen', 'shared'], function(gen, shared){
             }],
             ["Filter Stack Size Test",
             function(){
-                var g = gen.filter(shared.count(), function(v){ return v > 100000; });
+                var g = gen.filter(shared.count(), function(v){ return v > 100000; }).sync();
                 assert.equal(g(), 100001);
             }],
         ],
