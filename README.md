@@ -7,7 +7,8 @@ potetially infinite data structures:
 
     // Simple generator for Fibonacci numbers.
     // The definition of fibonacci can be found later in the document.
-    var f = gen(fibonacci());
+    var f = gen(fibonacci())
+        .sync();
     f() -> 0
     f() -> 1
     f() -> 1
@@ -19,7 +20,9 @@ potetially infinite data structures:
 Operations can also be applied to generators:
 
     // Square each Fibonacci number.
-    var f = gen(fibonacci()).map(function(v){ return v * v;});
+    var f = gen(fibonacci())
+        .map(function(v){ return v * v;})
+        .sync();
     f() -> 0
     f() -> 1
     f() -> 1
@@ -29,7 +32,9 @@ Operations can also be applied to generators:
     ....
     
     // Return only even Fibonacci numbers
-    var f = gen(fibonacci()).filter(function(v) { return ((v % 2) === 0); });
+    var f = gen(fibonacci())
+        .filter(function(v) { return ((v % 2) === 0); })
+        .sync();
     f() -> 0
     f() -> 2
     f() -> 8
@@ -87,12 +92,12 @@ Here is an example of a generator that yields the fibonacci sequence:
 
 In gen.js, generator's must conform to an API to behave correctly. As seen
 here, stateful generators usually are created using a factory. The factory defines
-an implicit state for generator with its context and arguments can be passed to
-the factory function to control the behavior output generator.
+an implicit state for the generator with its context, and arguments can be passed to
+the factory function to control the behavior produced generator.
 
 Generator functions themselves take two continuations factories, 'y' and 'b', as
-arguments and must return a continuation (usually one from the factory). Because
-we cannot support a language level yield statement, generators in gen.js are bit
+arguments and must return a continuation for a factory. Because we cannot
+support a language level yield statement, generators in gen.js are bit
 more difficult to write than generators in languages such as Python.
 
 'y' is the yield continuation that yields a value from the generator. 'b' is the
@@ -118,7 +123,7 @@ The generator function can also be bound to always use a continuation factory:
 
     var b;
     var g = gen(fibonacci())
-        .bind(undefined, function(v){
+        .sync(function(v){
             b = v;
             return function(){}
         });
@@ -156,37 +161,71 @@ Many generator functions have two versions, a static one defined on 'gen' that
 takes a source as an argument and a method style one defined on the returned
 generator function (this is noted as gen()).
 
-## gen.properties ##
-An object that defines the properties, in 'Object.defineProperties' notation, to
-set on returned generator functions. Unlike prototype, adding or changing
-properties only effects instances created after the property is changed.
+## gen.prototype ##
+An object that defines the prototype for any generator instances.
+
+## gen().sync(y, b)  ##
+Create a simple syncronous generator function form a gen instance. Syncronous
+generator functions can return values directly but may block on infinite 
+operations.
+
+'y' and 'b' are the the default yield and break continuation factories used by
+the generator function, custom ones can also be supplied to the generator
+function directly.
+
+## gen().async(y, b) ##
+Create a simple asyncronous generator function form a gen instance. Asyncronous
+generator functions cannot return values directly but can be used to process
+potentially infinite operations directly.
+
+    var g = gen(count(2))
+        .async();
+        
+    var y = function(v) {
+        alert(v);
+        return function(){};
+    };
+    
+    g(); -> alerts '0'
+    g(); -> alerts '1'
+
+'y' and 'b' are the the default yield and break continuation factories used by
+the generator function, custom ones can also be supplied to the generator
+function directly.
+
 
 ## gen.map(source, callback: function(value), thisObj): gen ##
-####gen().map(callback: function(value), thisObj): gen####
+#### gen().map(callback: function(value), thisObj): gen ####
 Creates a mapped generator for a source generator. Mapped generator runs source
 generator values through a callback function and returns the result.
 
-    var g = gen.map(fibonacci(), function(v){ return v + 1;});
+    var g = gen(fibonacci())
+        .map(function(v){ return v + 1;})
+        .sync();
     g(); -> 1
     g(); -> 2
 
 ## gen.filter(source, predicate: function(value): boolean, thisObj) ##
-####gen().filter(predicate: function(value): boolean, thisObj)####
+#### gen().filter(predicate: function(value): boolean, thisObj) ####
 Creates a filtered generator for a source generator. Filtered generator only
 returns filtered generator results that satisfy a given predicate.
 
-    var g = gen.filter(fibonacci(), function(v) { return ((v % 2) === 0); });
+    var g = gen(fibonacci())
+        .filter(function(v) { return ((v % 2) === 0); })
+        .sync();
     g(); -> 0
     g(); -> 2
 
 ## gen.reduce(source, callback: function(previous, current), initial) ##
-####gen().reduce(callback: function(previous, current), initial)####
+#### gen().reduce(callback: function(previous, current), initial) ####
 Creates a reduce generator for a source generator. Reduce generator attempts
 to reduce the source generator using the callback function and yield a single
 result. Will attempt the entire reduction when called. Calling on an infinite
 source will stall the program.
 
-    var g = gen.reduce(count(4), function add(p, c) { return p + c ; }, 0);
+    var g = gen(count(4))
+    .reduce(function add(p, c) { return p + c ; }, 0)
+    .sync();
     g(); -> 6
     g(); -> Break
 
@@ -196,7 +235,9 @@ Creates a toArray generator for a source generator. ToArray generator attempts
 to reduce the source generator to an array of its elements and yield this array.
 Calling on an infinite source will stall the program.
 
-    var g = gen.toArray(count(4));
+    var g = gen(count(4))
+        .toArray()
+        .sync();
     g(); -> [0, 1, 2, 3]
     g(); -> Break
 
@@ -206,6 +247,8 @@ Creates a forEach generator for a source generator. forEach generator attempts t
 iterate over entire source generator and call callback for each value. Yields
 a single value, void. Calling on an infinite source will stall the program.
 
-    var g = gen.forEach(count(4), function(v){ alert(v); });
+    var g = gen(count(4))
+        .forEach(function(v){ alert(v); })
+        .sync();
     g(); -> alerts '0', '1', '2', '3'
     g(); -> Break
