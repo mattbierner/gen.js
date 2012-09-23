@@ -3,7 +3,7 @@
 ## About ##
 gen.js is a library for working with continuation based generator functions in
 regular Javascript. Generators allow lazy generation and evaluation of
-potetially infinite data structures:
+potentially infinite data structures:
 
     // Simple generator for Fibonacci numbers.
     // The definition of fibonacci can be found later in the document.
@@ -132,7 +132,7 @@ The generator function can also be bound to always use a continuation factory:
     g(); -> b = 1
 
 As the custom continuation demonstrates, yield and break continuation factories
-return a continuation that actualy performs the executed behavior. Factories can
+return a continuation that actually performs the executed behavior. Factories can
 define behaviors to execute when the continuation is created and when the
 continuation is actually executed. The result of the continuation is what the
 generator function actually returns.
@@ -165,7 +165,7 @@ generator function (this is noted as gen()).
 An object that defines the prototype for any generator instances.
 
 ## gen().sync(y, b)  ##
-Create a simple syncronous generator function form a gen instance. Syncronous
+Create a simple synchronous generator function form a gen instance. Synchronous
 generator functions can return values directly but may block on infinite 
 operations.
 
@@ -174,7 +174,7 @@ the generator function, custom ones can also be supplied to the generator
 function directly.
 
 ## gen().async(y, b) ##
-Create a simple asyncronous generator function form a gen instance. Asyncronous
+Create a simple asynchronous generator function form a gen instance. Asynchronous
 generator functions cannot return values directly but can be used to process
 potentially infinite operations directly.
 
