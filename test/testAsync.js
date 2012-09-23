@@ -10,12 +10,10 @@ define(['gen', 'shared'], function(gen, shared){
                 g(function(v){
                     assert.equal(v, 0);
                     start();
-                    return function(){};
                 });
                 g(function(v){
                     assert.equal(v, 1);
                     start();
-                    return function(){};
                 });
             }],
             ["Continue Test",
@@ -28,7 +26,6 @@ define(['gen', 'shared'], function(gen, shared){
                 g(function(){
                     assert.equal(vv, 3);
                     start();
-                    return function(){};
                 });
                 
             }]

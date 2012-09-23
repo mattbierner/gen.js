@@ -22,7 +22,8 @@ define(['gen', 'shared'], function(gen, shared){
             ["Custom Yield",
             function(){
                 var a;
-                var g = gen.toArray(shared.count(4)).sync().bind(undefined, function(v){ a = v; return function(){} });
+                var g = gen.toArray(shared.count(4))
+                    .sync(function(v){ a = v; return function(){} });
                 
                 g();
                 assert.deepEqual(a, [0, 1, 2, 3]);
@@ -31,7 +32,8 @@ define(['gen', 'shared'], function(gen, shared){
             ["Custom Break",
             function(){
                 var a;
-                var g = gen.toArray(shared.count(4)).sync().bind(undefined, undefined, function(v){ a = 10; return function(){} });
+                var g = gen.toArray(shared.count(4))
+                    .sync(undefined, function(v){ a = 10; return function(){} });
                 
                 assert.deepEqual(g(), [0, 1, 2, 3]);
                 g();

@@ -31,17 +31,16 @@ define(['gen', 'shared'], function(gen, shared){
             ["Custom Break",
             function(){
                 var m, n;
-                var g = gen.map(shared.count(2), function(v){ return v + 1;}).sync();
-                var y = function(v){ m = v; return function(){ return v; } };
-                var b = function(v){ n = true; return function(){ } };
-                
-                g(y, b);
+                var g = gen.map(shared.count(2), function(v){ return v + 1;})
+                    .sync(function(v){ m = v; return function(){ return v; } }, function(v){ n = true; return function(){ } });
+
+                g();
                 assert.equal(m, 1);
                 assert.equal(n, undefined);
-                g(y, b);
+                g();
                 assert.equal(m, 2);
                 assert.equal(n, undefined);
-                g(y, b);
+                g();
                 assert.equal(n, true);
                 assert.equal(m, 2);
 

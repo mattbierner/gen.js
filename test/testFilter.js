@@ -24,8 +24,7 @@ define(['gen', 'shared'], function(gen, shared){
                 var b;
                 var g = gen(shared.count(4))
                     .filter(isOdd)
-                    .sync()
-                    .bind(undefined, function(v){ b = v; return function(){}});
+                    .sync(function(v){ b = v; return function(){}});
                 
                 g();
                 assert.equal(b, 1);
@@ -38,8 +37,7 @@ define(['gen', 'shared'], function(gen, shared){
                 var b, c
                 var g = gen(shared.count(4))
                     .filter(isOdd)
-                    .sync()
-                    .bind(undefined, function(v){ c = v; return function(){ return v; }}, function(){ b = 10; return function(){}});
+                    .sync(function(v){ c = v; return function(){ return v; }}, function(){ b = 10; return function(){}});
                 
                 assert.equal(g(), 1);
                 assert.equal(g(), 3);

@@ -21,14 +21,17 @@ define(['gen', 'shared'], function(gen, shared){
             }],
             ["Empty Reduce",
             function(){
-                var g = gen.reduce(shared.count(0), add, 100).sync();
+                var g = gen.reduce(shared.count(0), add, 100)
+                    .sync();
                 assert.equal(g(), 100);
                 assert.throws(g);
             }],
             ["Custom Yield",
             function(){
                 var b;
-                var g = gen(shared.count(4)).reduce(add, 0).sync().bind(undefined, function(v){ b = v; return function(){}});
+                var g = gen(shared.count(4))
+                    .reduce(add, 0)
+                    .sync(function(v){ b = v; return function(){}});
                 
                 g();
                 assert.equal(b, 6);
@@ -37,7 +40,9 @@ define(['gen', 'shared'], function(gen, shared){
             ["Custom Break",
             function(){
                 var b;
-                var g = gen(shared.count(4)).reduce(add, 0).sync().bind(undefined, undefined, function(){ b = 10; return function(){}});
+                var g = gen(shared.count(4))
+                    .reduce(add, 0)
+                    .sync(undefined, function(){ b = 10; return function(){}});
                 
                 assert.equal(g(), 6);
                 g();
