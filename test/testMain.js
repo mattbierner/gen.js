@@ -64,6 +64,18 @@ define(['gen', 'shared'], function(gen, shared){
                 g();
                 assert.equal(b, 10);
             }],
+            ["Custom On Break",
+            function(){
+                var b;
+                var g = gen(shared.count(2))
+                    .sync()
+                    .bind(undefined, undefined, function(){ b = 100; });
+                
+                assert.equal(g(), 0);
+                assert.equal(g(), 1);
+                assert.throws(g);
+                assert.equal(b, 100);
+            }],
             ["Test Chaining",
             function(){
                 var inc = function(v){ return v + 1;};
