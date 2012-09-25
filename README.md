@@ -3,8 +3,8 @@
 ## About ##
 gen.js is a library for working with continuation based generator functions in
 regular Javascript. Generators allow lazy generation and evaluation of
-potentially infinite data structures. Gen include support for synchronous 
-and asynchronous operations on generator, a simple set of core generator functions,
+potentially infinite data structures. Gen includes support for synchronous 
+and asynchronous operations on generators, a simple set of core generator functions,
 and a small set of additional batteries-included functions
 
     // Simple generator for Fibonacci numbers.
