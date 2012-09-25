@@ -3,7 +3,9 @@
 ## About ##
 gen.js is a library for working with continuation based generator functions in
 regular Javascript. Generators allow lazy generation and evaluation of
-potentially infinite data structures:
+potentially infinite data structures. Gen include support for synchronous 
+and asynchronous operations on generator, a simple set of core generator functions,
+and a small set of additional batteries-included functions
 
     // Simple generator for Fibonacci numbers.
     // The definition of fibonacci can be found later in the document.
@@ -93,11 +95,11 @@ Here is an example of a generator that yields the fibonacci sequence:
 In gen.js, generator's must conform to an API to behave correctly. As seen
 here, stateful generators usually are created using a factory. The factory defines
 an implicit state for the generator with its context, and arguments can be passed to
-the factory function to control the behavior produced generator.
+the factory function to control the behavior of the produced generator.
 
 Generator functions themselves take two continuations factories, 'y' and 'b', as
-arguments and must return a continuation for a factory. Because we cannot
-support a language level yield statement, generators in gen.js are bit
+arguments and must return a continuation from one of these factories. Because we
+cannot support a language level yield statement, generators in gen.js are bit
 more difficult to write than generators in languages such as Python.
 
 'y' is the yield continuation that yields a value from the generator. 'b' is the
@@ -125,7 +127,7 @@ The generator function can also be bound to always use a continuation factory:
     var g = gen(fibonacci())
         .sync(function(v){
             b = v;
-            return function(){}
+            return function(){};
         });
     
     g(); -> b = 0
@@ -165,7 +167,7 @@ generator function (this is noted as gen()).
 An object that defines the prototype for any generator instances.
 
 ## gen().sync(y, b)  ##
-Create a simple synchronous generator function form a gen instance. Synchronous
+Create a simple synchronous generator function from a gen instance. Synchronous
 generator functions can return values directly but may block on infinite 
 operations.
 
@@ -174,7 +176,7 @@ the generator function, custom ones can also be supplied to the generator
 function directly.
 
 ## gen().async(y, b) ##
-Create a simple asynchronous generator function form a gen instance. Asynchronous
+Create a simple asynchronous generator function from a gen instance. Asynchronous
 generator functions cannot return values directly but can be used to process
 potentially infinite operations directly.
 
@@ -186,8 +188,8 @@ potentially infinite operations directly.
         return function(){};
     };
     
-    g(); -> alerts '0'
-    g(); -> alerts '1'
+    g(y); -> alerts '0'
+    g(y); -> alerts '1'
 
 'y' and 'b' are the the default yield and break continuation factories used by
 the generator function, custom ones can also be supplied to the generator
@@ -224,8 +226,8 @@ result. Will attempt the entire reduction when called. Calling on an infinite
 source will stall the program.
 
     var g = gen(count(4))
-    .reduce(function add(p, c) { return p + c ; }, 0)
-    .sync();
+        .reduce(function add(p, c) { return p + c ; }, 0)
+        .sync();
     g(); -> 6
     g(); -> Break
 
@@ -252,3 +254,150 @@ a single value, void. Calling on an infinite source will stall the program.
         .sync();
     g(); -> alerts '0', '1', '2', '3'
     g(); -> Break
+
+
+# Batteries API #
+## gen().takeWhile(predicate: function(value): boolean, thisObj) ##
+Yields values from a source generator while a condition holds true, then breaks.
+The 'predicate' function is called for each value and determines when to stop
+yielding values. 'thisObj' is the 'this' object used for 'predicate'.
+
+    var g = gen(count(100))
+        .takeWhile(function(v){ return v < 2; })
+        .sync();
+    g(); -> 0
+    g(); -> 1
+    g(); -> Break
+
+## gen().take(count) ##
+Yields at most 'count' items from a source generator, then breaks. Can yield
+fewer than 'count' items if the source generator breaks.
+
+    var g = gen(count(100))
+        .take(2)
+        .sync();
+    g(); -> 0
+    g(); -> 1
+    g(); -> Break
+
+## gen().skipWhile(pred: function(value): boolean, thisObj) ##
+Skips yielding items while a condition holds true before yielding any values.
+'count' items from a source generator, then breaks. The 'predicate' function is
+called for each value and determines when to stop skipping values and start yielding.
+'thisObj' is the 'this' object used for 'predicate'. 
+
+    var g = gen(count(100))
+        .skipWhile(function(){ return v < 4; })
+        .sync();
+    g(); -> 4
+    g(); -> 5
+    ....
+
+## gen().skip(count) ##
+Skips 'count' items from a source generator before yielding any values.
+
+    var g = gen(count(100))
+        .skip(4)
+        .sync();
+    g(); -> 4
+    g(); -> 5
+    ....
+
+## gen().reduceWhile(predicate: function(value): boolean, callback: function(previous, current, index), initial) ##
+Reduces a source generator while a condition holds true. Yields a single value,
+the result of the reduction, and then breaks. 'predicate' is called with current
+reduce result at each step to determine when to break. 'callback' and 'initial'
+are the same as 'reduce'.
+
+    var g = gen(count(100))
+        .reduceWhile(function(v){ return v < 4;}, function(p, c) { return p + c ; }, 0)
+        .sync();
+    g(); -> 6
+    g(); -> Break
+
+## gen().count() ##
+Yields a single value, the number of items that a source generator yields, then
+breaks.
+
+    var g = gen(count(100))
+        .take(4)
+        .count()
+        .sync();
+    g(); -> 4
+    g(); -> Break
+    ....
+
+## gen().any(predicate: function(value): boolean, thisObj) ##
+Checks a source generator to see if any value holds true for a given 'predicate'
+function. Yields a single, boolean value and then breaks. 'thisObj' is the
+'this' object used for 'predicate'. On an infinite sources, will stop once a 
+single true value is found. If no value is found, it will stall.
+
+    var g = gen(count(100))
+        .any(function(){ return v % 2 == 1; })
+        .sync();
+    g(); -> true
+    g(); -> Break
+    
+    var f = gen(count(100))
+        .any(function(){ return v == 1000; })
+        .sync();
+    f(); -> false
+    f(); -> Break
+
+## gen().every(predicate: function(value): boolean, thisObj) ##
+Checks a source generator to see if every value holds true for a given 'predicate'
+function. Yields a single, boolean value and then breaks. 'thisObj' is the
+'this' object used for 'predicate'. On an infinite sources, will stop once a 
+single false value is found. If no false value is found, it will stall.
+
+    var g = gen(count(100))
+        .every(function(){ return v % 2 == 1; })
+        .sync();
+    g(); -> false
+    g(); -> Break
+    
+    var f = gen(count(100))
+        .any(function(){ return v > -1; })
+        .sync();
+    f(); -> true
+    f(); -> Break
+
+
+# Known Limitation #
+
+## Stalling ##
+Operations on infinite generators may stall.
+
+    var g = gen(count())
+        .reduce(function add(p, c) { return p + c ; }, 0)
+        .sync();
+    g(); -> STALL
+
+## Copying ##
+Gen generators cannot be safely copied at this time. Only one instance of a 
+given generator should be used at a time. There are a few ways things can go
+wrong:
+
+    // Multiple assignment
+    // Usually, do not do this.
+    var g = gen(count(100))
+        .sync()
+    var f = g;
+    g(); -> 0
+    f(); -> 1
+    g(); -> 2
+
+    // Multiple assignment
+    // DO NOT DO THIS
+    var g = gen(count(100));
+    var f = g.sync();
+    var j = g.sync()
+    f(); -> 0
+    j(); -> 1
+    f(); -> 2
+
+## Moving Backwards ##
+Gen only supports yielding the next value of a generator. You cannot move backwards, 
+attempt to retrieve previous values, or query for the last value of a generator 
+by default (Custom generator functions  could be used to provide this behavior).
