@@ -81,10 +81,10 @@ define(['gen', 'shared'], function(gen, shared){
                 var inc = function(v){ return v + 1;};
                 var doub = function(v){ return v * 2;};
 
-                var g = gen(shared.count(2));
-                g = g.map(inc);
-                g = g.map(doub);
-                g = g.sync();
+                var g = gen(shared.count(2))
+                    .map(inc)
+                    .map(doub)
+                    .sync();
                 assert.equal(g(), 2);
                 assert.equal(g(), 4);
                 assert.throws(g);
@@ -99,11 +99,13 @@ define(['gen', 'shared'], function(gen, shared){
             }],
             ["evenGen Stack Size Gen",
             function(){
-                var g = gen(evenGen()).sync();
+                var g = gen(evenGen())
+                    .sync();
                 for (var i = 0; i < 100000; ++i) {
                     g();
                 }
                 assert.ok(1);
+                
             }],
             ["Continue Stack Size Gen",
             function(){

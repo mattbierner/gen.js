@@ -5,17 +5,22 @@ define(['gen', 'shared'], function(gen, shared){
         'tests': [
             ["Simple ToArray",
             function(){
-                var g = gen.toArray(shared.count(4)).sync();
+                var g = gen.toArray(shared.count(4))
+                    .sync();
                 assert.deepEqual(g(), [0, 1, 2, 3]);
                 assert.throws(g);
                 
-                var g2 = gen(shared.count(4)).toArray().sync();
+                var g2 = gen(shared.count(4))
+                    .toArray()
+                    .sync();
                 assert.deepEqual(g2(), [0, 1, 2, 3]);
                 assert.throws(g2);
             }],
             ["Empty Generator",
             function(){
-                var g = gen(shared.count(0)).toArray().sync();
+                var g = gen(shared.count(0))
+                    .toArray()
+                    .sync();
                 assert.deepEqual(g(), []);
                 assert.throws(g);
             }],
