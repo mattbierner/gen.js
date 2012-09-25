@@ -32,7 +32,8 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             ["Custom Yield",
             function(){
                 var b;
-                var g = bat.skip(gen(shared.count()), 4).sync().bind(undefined, function(v){ b = v; return function(){}});
+                var g = bat.skip(gen(shared.count()), 4)
+                    .sync(function(v){ b = v; return function(){}});
                 
                 g();
                 assert.equal(b, 4);
@@ -42,7 +43,8 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             ["Custom Break",
             function(){
                 var b;
-                var g = bat.skip(gen(shared.count(4)), 2).sync().bind(undefined, undefined, function(){ b = 10; return function(){}});
+                var g = bat.skip(gen(shared.count(4)), 2)
+                    .sync(undefined, function(){ b = 10; return function(){}});
                 
                 assert.equal(g(), 2);
                 assert.equal(g(), 3);

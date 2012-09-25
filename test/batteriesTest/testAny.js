@@ -30,8 +30,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = bat
                     .any(gen(shared.count(4)), function(v){ return v == 2; })
-                    .sync()
-                    .bind(undefined, function(v){ b = v; return function(){}});
+                    .sync(function(v){ b = v; return function(){}});
                 
                 g();
                 assert.equal(b, true);
@@ -42,8 +41,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = bat
                     .any(gen(shared.count(4)), function(v){ return v == 2; })
-                    .sync()
-                    .bind(undefined, undefined, function(){ b = 10; return function(){}});
+                    .sync(undefined, function(){ b = 10; return function(){}});
                 
                 assert.equal(g(), true);
                 g();

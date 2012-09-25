@@ -27,8 +27,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = bat
                     .takeWhile(gen(shared.count()), function(v){ return v < 2; })
-                    .sync()
-                    .bind(undefined, function(v){ b = v; return function(){}});
+                    .sync(function(v){ b = v; return function(){}});
                 
                 g();
                 assert.equal(b, 0);
@@ -41,8 +40,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = bat
                     .takeWhile(gen(shared.count()), function(v){ return v < 2; })
-                    .sync()
-                    .bind(undefined, undefined, function(){ b = 10; return function(){}});
+                    .sync(undefined, function(){ b = 10; return function(){}});
                 
                 assert.equal(g(), 0);
                 assert.equal(g(), 1);
