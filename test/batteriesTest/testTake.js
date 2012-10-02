@@ -1,5 +1,6 @@
 define(['gen', 'bat', 'shared'], function(gen, bat, shared){
-        
+    bat(gen);
+
     return {
         'module': "Take Tests",
         'tests': [
