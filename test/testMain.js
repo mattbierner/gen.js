@@ -101,9 +101,11 @@ define(['gen', 'shared'], function(gen, shared){
             function(){
                 var g = gen(evenGen())
                     .sync();
+                console.profile();
                 for (var i = 0; i < 100000; ++i) {
                     g();
                 }
+                console.profileEnd();
                 assert.ok(1);
                 
             }],
