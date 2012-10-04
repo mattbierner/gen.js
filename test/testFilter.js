@@ -7,14 +7,15 @@ define(['gen', 'shared'], function(gen, shared){
         'tests': [
             ["Simple Filter",
             function(){
-                var g = gen.filter(shared.count(4), isOdd).sync();
+                var g = gen.filter(shared.count(4), isOdd)
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 1);
                 assert.equal(g(), 3);
                 assert.throws(g);
                 
                 var g2 = gen(shared.count(4))
                     .filter(isOdd)
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g2(), 1);
                 assert.equal(g2(), 3);
                 assert.throws(g2);
@@ -24,7 +25,7 @@ define(['gen', 'shared'], function(gen, shared){
                 var b;
                 var g = gen(shared.count(4))
                     .filter(isOdd)
-                    .sync(function(v){ b = v; return function(){}});
+                    .sync(function(v){ b = v; return function(){}}, shared.b);
                 
                 g();
                 assert.equal(b, 1);

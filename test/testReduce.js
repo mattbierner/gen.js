@@ -9,20 +9,21 @@ define(['gen', 'shared'], function(gen, shared){
         'tests': [
             ["Simple Reduce",
             function(){
-                var g = gen.reduce(shared.count(4), add, 0).sync();
+                var g = gen.reduce(shared.count(4), add, 0)
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 6);
                 assert.throws(g);
                 
                 var g2 = gen(shared.count(4))
                     .reduce(add, 0)
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g2(), 6);
                 assert.throws(g2);
             }],
             ["Empty Reduce",
             function(){
                 var g = gen.reduce(shared.count(0), add, 100)
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 100);
                 assert.throws(g);
             }],
@@ -31,7 +32,7 @@ define(['gen', 'shared'], function(gen, shared){
                 var b;
                 var g = gen(shared.count(4))
                     .reduce(add, 0)
-                    .sync(function(v){ b = v; return function(){}});
+                    .sync(function(v){ b = v; return function(){}}, shared.b);
                 
                 g();
                 assert.equal(b, 6);
@@ -50,7 +51,8 @@ define(['gen', 'shared'], function(gen, shared){
             }],
             ["Reduce Stack Size",
             function(){
-                var g = gen.reduce(shared.count(10000), add, 0).sync();
+                var g = gen.reduce(shared.count(10000), add, 0)
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 49995000);
                 assert.throws(g);
             }],

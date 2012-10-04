@@ -1,5 +1,6 @@
 define(['gen'], function(gen){
     return {
+        'b': function(){ return function(){ throw new gen.GenBreak; }},
         'count':
             function(n) {
                 n == (!isNaN(n) && n >= 0  ? n : Infinity);

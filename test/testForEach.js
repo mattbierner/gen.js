@@ -7,14 +7,14 @@ define(['gen', 'shared'], function(gen, shared){
             function(){
                 var b = 0;
                 var g = gen.forEach(shared.count(4), function(v){ b += v;})
-                    .sync();
+                    .sync(undefined, shared.b);
                 g();
                 assert.equal(b, 6);
                 assert.throws(g);
                 
                 var b2 = 0;
                 var g2 = gen(shared.count(4)).forEach(function(v){ b2 += v;})
-                    .sync();
+                    .sync(undefined, shared.b);
                 g2()
                 assert.equal(b2, 6);
                 assert.throws(g2);
@@ -23,7 +23,7 @@ define(['gen', 'shared'], function(gen, shared){
             function(){
                 var x, b = 0;
                 var g = gen.forEach(shared.count(4), function(v){ b += v;})
-                    .sync(function(v){ x = 100; return function(){ return v; } });
+                    .sync(function(v){ x = 100; return function(){ return v; } }, shared.b);
                 
                 g();
                 assert.equal(x, 100);

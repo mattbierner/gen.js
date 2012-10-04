@@ -14,7 +14,8 @@ define(['gen', 'shared'], function(gen, shared){
         'tests': [
             ["Simple Gen",
             function(){
-                var g = gen(shared.count(4)).sync();
+                var g = gen(shared.count(4))
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 0);
                 assert.equal(g(), 1);
                 assert.equal(g(), 2);
@@ -45,7 +46,7 @@ define(['gen', 'shared'], function(gen, shared){
             function(){
                 var b;
                 var g = gen(shared.count(2))
-                    .sync(function(v){ b = v; return function(){}; } );
+                    .sync(function(v){ b = v; return function(){}; }, shared.b);
                     
                 g();
                 assert.equal(b, 0);
@@ -68,7 +69,7 @@ define(['gen', 'shared'], function(gen, shared){
             function(){
                 var b;
                 var g = gen(shared.count(2))
-                    .sync()
+                    .sync(undefined, shared.b)
                     .bind(undefined, undefined, function(){ b = 100; });
                 
                 assert.equal(g(), 0);
@@ -84,7 +85,7 @@ define(['gen', 'shared'], function(gen, shared){
                 var g = gen(shared.count(2))
                     .map(inc)
                     .map(doub)
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 2);
                 assert.equal(g(), 4);
                 assert.throws(g);
@@ -92,7 +93,7 @@ define(['gen', 'shared'], function(gen, shared){
                 var g2 = gen(shared.count(2))
                     .map(doub)
                     .map(inc)
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g2(), 1);
                 assert.equal(g2(), 3);
                 assert.throws(g2);

@@ -6,13 +6,13 @@ define(['gen', 'shared'], function(gen, shared){
             ["Simple ToArray",
             function(){
                 var g = gen.toArray(shared.count(4))
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.deepEqual(g(), [0, 1, 2, 3]);
                 assert.throws(g);
                 
                 var g2 = gen(shared.count(4))
                     .toArray()
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.deepEqual(g2(), [0, 1, 2, 3]);
                 assert.throws(g2);
             }],
@@ -20,7 +20,7 @@ define(['gen', 'shared'], function(gen, shared){
             function(){
                 var g = gen(shared.count(0))
                     .toArray()
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.deepEqual(g(), []);
                 assert.throws(g);
             }],
@@ -28,7 +28,7 @@ define(['gen', 'shared'], function(gen, shared){
             function(){
                 var a;
                 var g = gen.toArray(shared.count(4))
-                    .sync(function(v){ a = v; return function(){} });
+                    .sync(function(v){ a = v; return function(){} }, shared.b);
                 
                 g();
                 assert.deepEqual(a, [0, 1, 2, 3]);
