@@ -5,8 +5,7 @@ define(['gen'], function(gen){
                 n == (!isNaN(n) && n >= 0  ? n : Infinity);
                 var i = 0;
                 return function(y, b) {
-                    if (i >= n) return b()
-                    return y(i++);
+                    i >= n ? b() : y(i++);
                 };
             },
         'fib': 
@@ -16,7 +15,7 @@ define(['gen'], function(gen){
                     var next = c;
                     c = d;
                     d = next + d;
-                    return y(next);
+                    y(next);
                 };
             }
     };
