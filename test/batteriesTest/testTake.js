@@ -8,7 +8,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g = gen(shared.count())
                     .take(2)
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 0);
                 assert.equal(g(), 1);
                 assert.throws(g);
@@ -17,14 +17,14 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g = gen(shared.count())
                     .take(0)
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.throws(g);
             }],
             ["Bad Take",
             function(){
                 var g = gen(shared.count())
                     .take(-1)
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 0);
                 assert.equal(g(), 1);
                 assert.equal(g(), 2);
@@ -33,7 +33,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g = gen(shared.count(2))
                     .take(4)
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 0);
                 assert.equal(g(), 1);
                 assert.throws(g);
@@ -43,7 +43,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = gen(shared.count())
                     .take(2)
-                    .sync( function(v){ b = v; return function(){}});
+                    .sync(function(v){ b = v; return function(){}}, shared.b);
                 
                 g();
                 assert.equal(b, 0);

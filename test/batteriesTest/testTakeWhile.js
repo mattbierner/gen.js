@@ -8,7 +8,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g = gen(shared.count())
                     .takeWhile(function(v){ return v < 2; })
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 0);
                 assert.equal(g(), 1);
                 assert.throws(g);
@@ -17,14 +17,14 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g = gen(shared.count())
                     .takeWhile(function(v){ return false; })
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.throws(g);
             }],
             ["Length TakeWhile",
             function(){
                 var g = gen(shared.count(2))
                     .takeWhile(function(v){ return v < 4; })
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 0);
                 assert.equal(g(), 1);
                 assert.throws(g);
@@ -34,7 +34,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = gen(shared.count())
                     .takeWhile(function(v){ return v < 2; })
-                    .sync(function(v){ b = v; return function(){}});
+                    .sync(function(v){ b = v; return function(){}}, shared.b);
                 
                 g();
                 assert.equal(b, 0);

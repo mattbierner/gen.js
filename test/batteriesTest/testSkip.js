@@ -7,7 +7,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g = gen(shared.count())
                     .skip(4)
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 4);
                 assert.equal(g(), 5);
             }],
@@ -15,7 +15,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g = gen(shared.count(4))
                     .skip(2)
-                    .sync()
+                    .sync(undefined, shared.b)
                 assert.equal(g(), 2);
                 assert.equal(g(), 3);
                 assert.throws(g);
@@ -24,7 +24,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g = gen(shared.count())
                     .skip(0)
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 0);
                 assert.equal(g(), 1);
             }],
@@ -32,7 +32,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g = gen(shared.count())
                     .skip(-1)
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), 0);
                 assert.equal(g(), 1);
                 assert.equal(g(), 2);

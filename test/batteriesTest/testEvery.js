@@ -8,13 +8,13 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g = gen(shared.count(4))
                     .every(function(v, i){ return v < 10 })
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), true);
                 assert.throws(g);
                 
                 var g2 = gen(shared.count(4))
                     .every(function(v, i){ return v < 2 })
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g2(), false);
                 assert.throws(g2);
             }],
@@ -22,7 +22,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g = gen(shared.count(4))
                     .every(function(){ return false; })
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), false);
                 assert.throws(g);
             }],
@@ -30,7 +30,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g2 = gen(shared.count(0))
                     .every(function(){ return true; })
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g2(), true);
                 assert.throws(g2);
             }],
@@ -38,7 +38,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
             function(){
                 var g = gen(shared.count())
                     .every(function(){ return false; })
-                    .sync();
+                    .sync(undefined, shared.b);
                 assert.equal(g(), false);
                 assert.throws(g);
             }],
@@ -47,7 +47,7 @@ define(['gen', 'bat', 'shared'], function(gen, bat, shared){
                 var b;
                 var g = gen(shared.count(4))
                     .every(function(v){ return v < 10; })
-                    .sync(function(v){ b = v; return function(){}});
+                    .sync(function(v){ b = v; return function(){}}, shared.b);
                 
                 g();
                 assert.equal(b, true);
