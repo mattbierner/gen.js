@@ -5,7 +5,7 @@ gen.js is a library for working with continuation based generator functions in
 regular Javascript. Generators allow lazy generation and evaluation of
 potentially infinite data structures. Gen includes support for synchronous 
 and asynchronous operations on generators, a simple set of core generator functions,
-and a small set of additional batteries-included functions
+and a small set of additional batteries-included functions.
 
     // Simple generator for Fibonacci numbers.
     // The definition of fibonacci can be found later in the document.
@@ -80,69 +80,73 @@ In this context, a generator is a special function that yields values from a
 sequence with each call. Generator functions often maintain internal state.
 
 ## Generators ##
+Gen.js generators must conform to an API and standard set of conventions.
+Because we cannot support a language level yield statement, generators in gen.js
+are bit more difficult to write than generators in languages such as Python.
+
 Here is an example of a generator that yields the fibonacci sequence:
 
-    function fibonacci() {         // Factory for generator
-        var c = 0, d = 1;          // Generator's implicit state
-        return function(y, b) {    // Actual generator function.
-            var next = c;          // fibonacci logic
+    function fibonacci() {          // Factory for generator
+        var c = 0, d = 1;           // Generator's implicit state
+        return function(y, b, r) {  // Actual generator function.
+            var next = c;           // fibonacci logic
             c = d;
             d = next + d;
-            return y(next);        // Yield the value 'next'.
+            return y(next);         // Yield the value 'next'. return not required.
         };
     }
 
-In gen.js, generator's must conform to an API to behave correctly. As seen
-here, stateful generators usually are created using a factory. The factory defines
-an implicit state for the generator with its context, and arguments can be passed to
-the factory function to control the behavior of the produced generator.
+As seen here, stateful generators usually are created using a factory. The
+factory's context defines implicit state for the generator, and arguments passed to
+the factory can control the behavior of the produced generator.
 
-Generator functions themselves take two continuations factories, 'y' and 'b', as
-arguments and must return a continuation from one of these factories. Because we
-cannot support a language level yield statement, generators in gen.js are bit
-more difficult to write than generators in languages such as Python.
+Generator functions themselves take three arguments: 'y', 'b', and 'r'. Each of
+these are factories for a continuations that performs an action: yield, break,
+or recurse. The generator function must call one, and only one, of these when
+invoked. Generator functions do not have to return anything, but return statements
+can be used to make the intention clearer
 
-'y' is the yield continuation that yields a value from the generator. 'b' is the
-break continuation that is called when the generator has no more values to yield.
-When a generator does not return a value, this is assumed to be an implicit 
-continue request and the generator function will be invoked again until it 
-returns a yield or break.
+'y' is the yield continuation factory. It produces a callback that yields a
+value from the generator. 'b' is the break continuation factor. It is called
+when the generator has no more values to yield. 'r' schedules another generator
+for execution, using either 'sync' or 'async'.
 
 ## Gen Continuations ##
-Any generator function created by gen will provide default yield and break
-continuation factories, but the caller can also supply custom ones:
+Gen generators expose two types of continuations, a factory that returns a
+continuation and is used to control program flow and regular callbacks.
 
-    var b;
-    function y(v) {             // Custom Yield continuation factory that sets b.
-        b = v;                  // Custom on create behavior
-        return function(){};    // Returned continuation.
-    };
-    
-    g(y); -> b = 0
-    g(y); -> b = 1
-
-The generator function can also be bound to always use a continuation factory:
+Continuation factories return continuations to execute. They also can alter 
+control flow:
 
     var b;
     var g = gen(fibonacci())
-        .sync(function(v){
-            b = v;
-            return function(){};
+        .sync(function(v){              // Define a yield continuation factory
+            b = v;                      // Set closure variable 'b'
+            if (v % 2 === 0)            // If returned value is even
+                return function() { return v; };  // Return yield continuation
+            else
+                return gen.CONTINUE;    // Invoke the generator again.
         });
     
     g(); -> b = 0
     g(); -> b = 1
 
-As the custom continuation demonstrates, yield and break continuation factories
-return a continuation that actually performs the executed behavior. Factories can
-define behaviors to execute when the continuation is created and when the
-continuation is actually executed. The result of the continuation is what the
-generator function actually returns.
+When a continuation factory returns 'gen.CONTINUE' or does not return a value,
+the generator function will be invoked again automatically. Continuation 
+factories should not perform yield or break actions directly, but return a
+function that performs these actions. Generators created by gen will provide default yield and break
+continuation factories, but the caller can  supply custom ones.
 
-To be compatible with all generators, custom yield and break continuation
-factories should stick to this standard api. If a factory does not return a
-continuation, gen assumes the continuation be a continue statement and will
-attempt to fetch the next value from the generator.
+Gen also supports simple callback functions for yield and break. These are
+called whenever the generator yields or breaks and cannot control flow:
+
+    var b;
+    function y(v) {             // Custom Yield continuation that sets b.
+        b = v;                  // Custom on create behavior
+    };
+    
+    g(y); -> b = 0
+    g(y); -> b = 1
 
 ### Yield Continuation Factory ###
 Takes a single argument for the value being yielded. The default behavior is 
@@ -153,6 +157,10 @@ to return a continuation that returns the yielded value.
 Takes no arguments. The default behavior is return a continuation that throws a
 'GenBreak' exception. Overriding this can be useful when you do not want to deal
 with exceptions.
+
+### Recurse Continuation Factory ###
+Schedules the execution of another generator. Takes the same argumens as
+'sync' or 'async'.
 
 
 # API #
