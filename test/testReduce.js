@@ -57,5 +57,24 @@ define(['gen', 'shared'], function(gen, shared){
                 assert.throws(g);
             }],
         ],
+        'asyncTests': [
+            ["Reduce Async",
+            function(){
+                expect(1);
+                var g = gen(shared.count(100))
+                    .reduce(add, 0)
+                    .async();
+                
+                var count = 0;
+                var sched;
+                g(function(v){
+                    clearInterval(sched);
+                    assert.equal(count > 20, true);
+                    start();
+                });
+                
+                sched = setInterval(function(){ ++count; }, 0);
+            }],
+        ],
     };
 });

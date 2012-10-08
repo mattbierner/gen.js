@@ -1,6 +1,6 @@
 # ChangeLog #
 
-## 0.3.0 - October 4, 2012 ##
+## 1.0.0 - October 4, 2012 ##
 * Rewrote how async and sync work internally. 
 * Added real support for higher level generator scheduling using another
 generator correctly. Before, all internal generators used sync to iterate over
