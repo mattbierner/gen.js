@@ -1,5 +1,9 @@
 # ChangeLog #
 
+## 1.1.0 - October 7, 2012 ##
+* Made wrap use 'r' instead of 'sync'.
+* Updated param documentation.
+
 ## 1.0.0 - October 4, 2012 ##
 * Rewrote how async and sync work internally. 
 * Added real support for higher level generator scheduling using another
