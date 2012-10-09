@@ -1,5 +1,12 @@
 # ChangeLog #
 
+## 1.2.0 - October 9, 2012 ##
+* Renamed 'single' to 'once' to be more clear on what it does.
+* Updated wrap implementation.
+* Fixed value propogation through action callbacks to onAction callbacks. Now,
+the onYield callback recieves the value supplied by the yield callback, not the
+argument value.
+
 ## 1.1.0 - October 7, 2012 ##
 * Made wrap use 'r' instead of 'sync'.
 * Updated param documentation.
