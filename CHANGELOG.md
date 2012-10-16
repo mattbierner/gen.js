@@ -1,5 +1,10 @@
 # ChangeLog #
 
+## 1.2.1 - October 16, 2012 ##
+* Removed 'composed' dependancy.
+* Updated documentation.
+* Updated blocking tests.
+
 ## 1.2.0 - October 9, 2012 ##
 * Renamed 'single' to 'once' to be more clear on what it does.
 * Fixed value propogation through action callbacks to onAction callbacks. Now,

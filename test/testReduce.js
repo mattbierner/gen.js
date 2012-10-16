@@ -65,15 +65,20 @@ define(['gen', 'shared'], function(gen, shared){
                     .reduce(add, 0)
                     .async();
                 
-                var count = 0;
+                var ranToLong = false;
                 var sched;
                 g(function(v){
                     clearInterval(sched);
-                    assert.equal(count > 20, true);
+                    assert.equal(ranToLong, false);
                     start();
                 });
                 
-                sched = setInterval(function(){ ++count; }, 0);
+                var last = new Date();
+                sched = setInterval(function(){
+                    var now = new Date();
+                    ranToLong = ranToLong || (now - last) >= 50;
+                    last = now;
+                }, 0);
             }],
         ],
     };

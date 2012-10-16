@@ -69,7 +69,7 @@ Include gen.js file directly and use 'gen' global.
     <html>
     <head></head>
     <body>
-        <script type="application/javascript" src="callable.js"></script>
+        <script type="application/javascript" src="gen.js"></script>
         <script type="application/javascript">
             var g = gen(...);
         </script>
