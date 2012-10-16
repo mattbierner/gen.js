@@ -66,19 +66,18 @@ define(['gen', 'shared'], function(gen, shared){
                     .async();
                 
                 var ranToLong = false;
-                var sched;
+                var last = new Date();
+                var sched = setInterval(function(){
+                    var now = new Date();
+                    ranToLong = ranToLong || (now - last) >= 50;
+                    last = now;
+                }, 0);
+                
                 g(function(v){
                     clearInterval(sched);
                     assert.equal(ranToLong, false);
                     start();
                 });
-                
-                var last = new Date();
-                sched = setInterval(function(){
-                    var now = new Date();
-                    ranToLong = ranToLong || (now - last) >= 50;
-                    last = now;
-                }, 0);
             }],
         ],
     };
