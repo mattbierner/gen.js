@@ -75,6 +75,8 @@ define(['gen', 'shared'], function(gen, shared){
                 
                 g(function(v){
                     clearInterval(sched);
+                    var now = new Date();
+                    ranToLong = ranToLong || (now - last) >= 50;
                     assert.equal(ranToLong, false);
                     start();
                 });
