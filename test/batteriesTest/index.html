@@ -22,12 +22,12 @@
         });
         require(
             ['gen', 'testTakeWhile', 'testTake', 'testSkipWhile', 'testSkip',
-                'testCount', 'testAny', 'testEvery'],
+                'testCount', 'testAny', 'testEvery', 'testToArray'],
             function(gen, testTakeWhile, testTake, testSkipWhile, testSkip,
-                testCount, testAny, testEvery)
+                testCount, testAny, testEvery, testToArray)
             {
                 [testTakeWhile, testTake, testSkipWhile, testSkip,
-                    testCount, testAny, testEvery].forEach(function(m){
+                    testCount, testAny, testEvery, testToArray].forEach(function(m){
                     m.module && module(m.module);
                     m.tests.forEach(function(e){ test.apply(this, e); });
             });

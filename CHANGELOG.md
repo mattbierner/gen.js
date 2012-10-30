@@ -1,14 +1,18 @@
 # ChangeLog #
 
+## 1.3.0 - October 30, 2012 ##
+* Moved 'toArray' to batteries instead of core.
+* Added index argument for filter predicate.
+
 ## 1.2.1 - October 16, 2012 ##
-* Removed 'composed' dependancy.
+* Removed 'composed' dependency.
 * Updated documentation.
 * Updated blocking tests.
 
 ## 1.2.0 - October 9, 2012 ##
 * Renamed 'single' to 'once' to be more clear on what it does.
-* Fixed value propogation through action callbacks to onAction callbacks. Now,
-the onYield callback recieves the value supplied by the yield callback, not the
+* Fixed value propagation through action callbacks to onAction callbacks. Now,
+the onYield callback receives the value supplied by the yield callback, not the
 argument value.
 * Updated wrap implementation.
 * Fixed function and type closure annotations.
@@ -37,4 +41,4 @@ using 'gen.prototype'.
 
 
 ## 0.1.0 ##
-* Inital Release
+* Initial Release
